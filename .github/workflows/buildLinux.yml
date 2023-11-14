@@ -1,0 +1,27 @@
+name: buildLinux
+
+on:
+  push:
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Install Dependencies on Ubuntu lts 20
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libx11-dev libxrandr-dev libxrender-dev libxfixes-dev libxcursor-dev libxinerama-dev mesa-common-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev libfreetype6-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Execute Makefile
+        run: make
