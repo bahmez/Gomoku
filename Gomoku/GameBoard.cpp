@@ -29,4 +29,15 @@ namespace Gomoku {
     unsigned int GameBoard::getHeight() const {
         return this->_height;
     }
+
+    void GameBoard::clear() {
+        std::vector<GameBoard::Cell> row;
+
+        row.resize(this->_width, GameBoard::EMPTY);
+        this->_gameBoard.resize(this->_height, row);
+    }
+
+    std::vector<std::vector<GameBoard::Cell>> &GameBoard::getRows() {
+        return this->_gameBoard;
+    }
 }
