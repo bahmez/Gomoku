@@ -1,0 +1,77 @@
+name: Build and Release pbrain-frouzins
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  window-build:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+      - name: Install CMake and Make
+        run: |
+          choco install cmake make
+
+      - name: Display CMake and Make versions
+        run: |
+          cmake --version
+          make --version
+
+      - name: Execute Makefile
+        run: make
+
+      - name: Create Release Directory
+        run: mkdir release
+
+      - name: Move pbrain-frouzins.exe to Release
+        run: move pbrain-frouzins.exe release\pbrain-frouzins.exe
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  ubuntu-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Install Dependencies on Ubuntu
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y libx11-dev libxrandr-dev libxrender-dev libxfixes-dev libxcursor-dev libxinerama-dev mesa-common-dev libudev-dev libopenal-dev libvorbis-dev libflac-dev libfreetype6-dev
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Execute Makefile
+        run: make
+
+      - name: Create Release Directory
+        run: mkdir release
+
+      - name: Move Library to Release
+        run: mv pbrain-frouzins release/pbrain-frouzins
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
