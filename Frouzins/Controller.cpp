@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <sstream>
 #include "Controller.hpp"
 
 Controller::Controller() {
@@ -48,8 +49,10 @@ Controller::Controller() {
     });
     this->_handler.subscribe("DONE", [&](const std::vector<std::string> &argument) {
         try {
-            this->_listenBoard = false;
-            this->nextMove();
+            if (this->_listenBoard) {
+                this->_listenBoard = false;
+                this->nextMove();
+            }
         } catch (std::exception &e) {
             printError(std::string(e.what()));
         }
@@ -74,7 +77,14 @@ Controller::Controller() {
     this->_handler.subscribe("NotFound", [&](const std::vector<std::string> &argument) {
         try {
             if (this->_listenBoard) {
-                this->board(std::stoi(argument.at(0)), std::stoi(argument.at(1)), std::stoi(argument.at(2)));
+                std::stringstream elements(argument.at(0));
+                std::string xString;
+                std::string yString;
+                std::string fieldString;
+                std::getline(elements, xString, ',');
+                std::getline(elements, yString, ',');
+                std::getline(elements, fieldString, ',');
+                this->board(std::stoi(xString), std::stoi(yString), std::stoi(fieldString));
             }
         } catch (std::exception &e) {
             printError(std::string(e.what()));
@@ -362,12 +372,15 @@ void Controller::begin() {
 
 void Controller::turn(int x, int y) {
     if (!this->_gameBoard) return printError("GameBoard not initialized");
+    if (x < 0 || y < 0 || x >= this->_gameBoard->getWidth() || y >= this->_gameBoard->getWidth()) return printError("Invalid size");
     this->_gameBoard->operator[](y).at(x) = Gomoku::GameBoard::OPPONENT;
     this->nextMove();
 }
 
 void Controller::board(int x, int y, int field) {
     if (!this->_gameBoard) return printError("GameBoard not initialized");
+    if (x < 0 || y < 0 || x >= this->_gameBoard->getWidth() || y >= this->_gameBoard->getWidth()) return printError("Invalid size");
+    if (field < 1 || field > 3) return printError("Invalid field");
     if (field) {
         this->_gameBoard->operator[](y).at(x) = Gomoku::GameBoard::PLAYER;
     } else {
