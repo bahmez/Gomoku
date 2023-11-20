@@ -22,10 +22,6 @@ void CommandsHandler::update() {
     std::string argument;
     std::vector<std::string> arguments;
 
-    std::ofstream outfile;
-
-    outfile.open("test.txt", std::ios_base::app);
-    outfile << line << "\n";
     commandStream >> commandName;
     if (!this->_events.contains(commandName))
         arguments.push_back(commandName);
