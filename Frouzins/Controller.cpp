@@ -381,9 +381,9 @@ void Controller::board(int x, int y, int field) {
     if (!this->_gameBoard) return printError("GameBoard not initialized");
     if (x < 0 || y < 0 || x >= this->_gameBoard->getWidth() || y >= this->_gameBoard->getWidth()) return printError("Invalid size");
     if (field < 1 || field > 3) return printError("Invalid field");
-    if (field) {
+    if (field == 1) {
         this->_gameBoard->operator[](y).at(x) = Gomoku::GameBoard::PLAYER;
-    } else {
+    } else if (field == 2) {
         this->_gameBoard->operator[](y).at(x) = Gomoku::GameBoard::OPPONENT;
     }
 }
