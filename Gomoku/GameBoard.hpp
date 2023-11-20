@@ -7,6 +7,11 @@
 #include <vector>
 
 namespace Gomoku {
+    struct Position {
+        Position(int _x, int _y): x(_x), y(_y) {}
+        int x;
+        int y;
+    };
     class GameBoard {
     public:
         enum Cell {
@@ -19,6 +24,8 @@ namespace Gomoku {
         std::vector<Cell> &operator[](std::size_t y);
         unsigned int getWidth() const;
         unsigned int getHeight() const;
+        void clear();
+        std::vector<std::vector<Cell>> &getRows();
     private:
         std::vector<std::vector<Cell>> _gameBoard;
         unsigned int _width;
