@@ -1,4 +1,4 @@
-name: Build and Release pbrain-frouzins
+name: Build and Release pbrain-gomoku-ai
 
 on:
   push:
@@ -34,8 +34,8 @@ jobs:
       - name: Create Release Directory
         run: mkdir release
 
-      - name: Move pbrain-frouzins.exe to Release
-        run: move pbrain-frouzins.exe release\pbrain-frouzins.exe
+      - name: Move pbrain-gomoku-ai.exe to Release
+        run: move pbrain-gomoku-ai.exe release\pbrain-gomoku-ai.exe
 
       - name: Create GitHub Release
         id: create_release
@@ -66,7 +66,7 @@ jobs:
         run: mkdir release
 
       - name: Move Library to Release
-        run: mv pbrain-frouzins release/pbrain-frouzins
+        run: mv pbrain-gomoku-ai release/pbrain-gomoku-ai
 
       - name: Create GitHub Release
         id: create_release
